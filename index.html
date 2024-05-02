@@ -12,70 +12,53 @@
 <body>
     <main>
         <header>
-            <h1><span class="material-symbols-outlined">done</span><span class="hide">J</span>ust Do It</h1>
+            <div class="center"><h1><span class="logo material-symbols-outlined">done</span><span class="hide">J</span>ust Do It</h1></div>
             <nav>
-                <button id="btnAddTask" onclick="openDlg('addTaskDlg')"><span class="material-symbols-outlined">add</span>Add task</button>
-                <button><span class="material-symbols-outlined">filter_alt</span>Filter tasks</button>
-                <button><span class="material-symbols-outlined">sort</span>Sort tasks</button>
-                <button><span class="material-symbols-outlined">bomb</span>Delete all tasks</button>
+                <button id="btnAddTask" onclick="openDlg('addTaskDlg')"><span class="material-symbols-outlined">add_task</span> Add task</button>
+                <button id="btnFilter"><span class="material-symbols-outlined">filter_alt</span> Filter tasks</button>
+                <button onclick="openDlg('sortTasksDlg')"><span class="material-symbols-outlined">sort</span> Sort tasks</button>
+                <button onclick="openDlg('removeAllTasksDlg')"><span class="material-symbols-outlined">delete_forever</span> Delete all tasks</button>
             </nav>
+            <div class="filterCtrl">
+                <input type="text" id="tasksFilter" size="35" placeholder="Write here to filter tasks">
+            </div>
         </header>
         <section id="taskList">
-            <!-- <article class="task">
-                    <span class="taskName">Wash the car</span>
-                    <span class="expDate">2024-05-03</span>
-                    <span class="priority">Low</span>
-                    <span class="delete material-symbols-outlined">delete_forever</span>
-            </article>
-            <article class="task">
-                    <span class="taskName">Walk the dog</span>
-                    <span class="expDate">2024-05-03</span>
-                    <span class="priority">High</span>
-                    <span class="delete material-symbols-outlined">delete_forever</span>
-            </article>
-            <article class="task">
-                    <span class="taskName">Feed the snake</span>
-                    <span class="expDate">2024-05-03</span>
-                    <span class="priority">Medium</span>
-                    <span class="delete material-symbols-outlined">delete_forever</span>
-            </article> -->
         </section>
         <footer>
-            <p>Nothing here yet</p>
+            <p> &COPY; Omnia mea in aeternum</p>
         </footer>
     </main>
     <dialog id="addTaskDlg">
         <h2>Fill the form to add a new task</h2>
         <form action="#" method="dialog" id="formAddTask">
-            <label for="taskName">Introduce the neme of the task</label>
+            <label for="taskName">Write the name of the task:</label>
             <input type="text" name="taskName" id="taskName">
-            <label for="taskDueDate">Select the due date</label>
+            <label for="taskDueDate">Select the due date:</label>
             <input type="date" name="taskDueDate" id="taskDueDate">
-            <label for="taskPriority">Select the priority</label>
+            <label for="taskPriority">Select the priority:</label>
             <select name="taskPriority" id="taskPriority">
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="0">High</option>
+                <option value="1">Medium</option>
+                <option value="2">Low</option>
             </select>
-            <button type="submit" onclick="addTask('addTaskDlg')"><span class="material-symbols-outlined">add_task</span>Add task</button>
-            <button><span class="material-symbols-outlined">close</span>Cancel</button>
+            <button type="submit" onclick="addTask('addTaskDlg')"><span class="ok material-symbols-outlined">add</span> Add task</button>
+            <button onclick="closeDlg('addTaskDlg')"><span class="ko material-symbols-outlined">close</span> Cancel</button>
         </form>
-    </dialog>
-    <dialog id="filterTasksDlg">
-        <h2>Start writing to filter your tasks</h2>
-        <input type="text" placeholder="Start writing here" id="tasksFilter">
-        <button><span class="material-symbols-outlined">filter_list</span>Keep the selection</button>
-        <button><span class="material-symbols-outlined">filter_alt_off</span>Discard the selection</button>
     </dialog>
     <dialog id="sortTasksDlg">
         <h2>How do you want to sort your tasks?</h2>
-        <button><span class="material-symbols-outlined">calendar_month</span>Sort by date</button>
-        <button><span class="material-symbols-outlined">priority_high</span>Sort by priority</button>
+        <div class="center">
+            <button onclick="sortByDate()"><span class="ok material-symbols-outlined">calendar_month</span> Sort by date</button>
+            <button onclick="sortByPriority()"><span class="ok material-symbols-outlined">priority_high</span> Sort by priority</button>
+        </div>
     </dialog>
     <dialog id="removeAllTasksDlg">
         <h2><span class="danger">Caution!</span> All tasks will be deleted and the data will be lost forever.</h2>
-        <button><span class="material-symbols-outlined">delete_forever</span>Delete all data</button>
-        <button><span class="material-symbols-outlined">close</span>Cancel, don't delete</button>
+        <div class="center">
+            <button id="DelAllTasks" onclick="deleteAllTasks()"><span class="ko material-symbols-outlined">bomb</span> Delete all data</button>
+            <button onclick="closeDlg('removeAllTasksDlg')"><span class="ok material-symbols-outlined">close</span> Cancel, don't delete</button>
+        </div>
     </dialog>    
 </body>
 </html>

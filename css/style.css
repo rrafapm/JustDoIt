@@ -1,20 +1,224 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
 :root {
-    --color1: #f6f6f6; 
-    --color2: #d6e4f0; 
-    --color3: #1e56a0; 
-    --color4: #163172;
-    --yes-color: green;
-    --no-color: red;
+    --color1: #d6e4f0; 
+    --color2: #1e56a0; 
+    --color3: #163172;
+    --light: #f6f6f6;
+    --dark:  #101010;
+    --ok-color: green;
+    --ko-color: red;
 }
 
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: var(--color1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .material-symbols-outlined {
     vertical-align: bottom;
 }
 
+.center{
+    text-align: center;
+}
+
+h1 {
+    font-size: 5rem;
+    font-weight: bolder;
+    padding: 3rem;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+}
+
+.logo {
+    font-size: 10rem;
+    font-weight: bolder;    
+    vertical-align: -25%;
+    color: var(--ok-color);
+    margin-inline-end: -5rem;
+}
+
 .hide {
     display: none;
+}
+
+.danger {
+    color: var(--ko-color);
+    text-shadow: 2px 2px var(--dark);
+}
+
+.ok {color: var(--ok-color);}
+.ko {color: var(--ko-color);}
+
+nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    & button {
+        background-color: var(--color2);
+        color: var(--light);
+        font-size: large;
+        padding-block: .5rem;
+        padding-inline: 1.5rem;
+        border: none;
+        border-radius: .5rem;
+        outline: 2px solid var(--light);
+        box-shadow: 5px 5px 3px 0px var(--dark);
+    }
+
+    & button:hover {
+        scale: 1.05;
+    }
+
+    & button:active {
+        box-shadow: none;
+    }
+
+}
+
+.filterCtrl {
+    margin: 1rem;
+    text-align: center;
+}
+
+#tasksFilter {
+    background-color: var(--color2);
+    color: var(--light);
+    padding-block: .5rem;
+    padding-inline: 1rem;
+    font-size: large;
+    border-radius: .5rem;
+    /* box-shadow: -2px -2px 1px 0px var(--light) inset,
+                2px 2px 1px 0px var(--dark) inset; */
+}
+
+section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--color2);
+    color: var(--light);
+    font-size: x-large;
+    padding-block: 1rem;
+    padding-inline: 2rem;
+    outline: 2px solid var(--light);
+    border-radius: 1rem;
+
+
+    & button {
+        background-color: var(--color1);
+        color: var(--dark);
+        font-size: medium;
+        padding: .5rem;
+        border-radius: .5rem;
+        box-shadow: 2px 2px 1px 0px var(--dark);
+    }
+
+    & button:hover {
+        scale: 1.05;
+    }
+
+    & button:active {
+        box-shadow: none;
+    }
+
+}
+
+footer {
+    margin-block-start: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    min-height: 7.5vh;
+    background-color: var(--color2);
+    color: var(--light);
+    border-radius: 1rem;
+}
+
+dialog {
+    background-color: var(--color2);
+    color: var(--light);
+    font-size: x-large;
+    padding-block: 1rem;
+    padding-inline: 2rem;
+    /* text-align: center; */
+    outline: 2px solid var(--light);
+    border: none;
+    border-radius: 1rem;
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    & input, select {
+        background-color: var(--color1);
+        color: var(--dark);
+        padding-block: .5rem;
+        padding-inline: 1rem;
+        font-size: large;
+        border-radius: .5rem;
+    }
+
+    & button {
+        background-color: var(--color1);
+        color: var(--dark);
+        font-size: medium;
+        margin-inline: .5rem;
+        padding: .5rem;
+        border-radius: .5rem;
+        box-shadow: 2px 2px 1px 0px var(--dark);
+    }
+
+    & button:hover {
+        scale: 1.05;
+    }
+
+    & button:active {
+        box-shadow: none;
+    }
+    
+    &::backdrop {
+        background-color: var(--color2);
+        opacity: .3;
+    }
+}
+
+@media screen and (max-width: 880px) {
+
+    nav {grid-template-columns: repeat(2, 1fr);}
+}
+
+@media screen and (max-width: 660px) {
+
+    nav {grid-template-columns: 1fr;}
+    section {grid-template-columns: 1fr;}
 }

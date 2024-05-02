@@ -1,187 +1,339 @@
 
+const taskList = document.getElementById('taskList');
+const btnFilter = document.getElementById('btnFilter');
+const tasksFilter = document.getElementById('tasksFilter');
+
+
+// const btnDelAllTasks = document.getElementById('btnDelAllTasks');
+
+
 ////////////////////////////////////////////////////////////////
-//////////////////////  Datos para pruebas /////////////////////
+//////////////////////   Data for testing  /////////////////////
 ////////////////////////////////////////////////////////////////
 // Task object
 // {
 //     name: string,
 //     duedate: date object,
-//     priority: integer
+//     priority: int
 // };
-
-const testDate = new Date;
-// console.log(testDate);
-const testDate2 = new Date;
-// console.log(testDate2);
-const testDate3 = new Date;
-// console.log(testDate3);
-let tasks = new Array;
-
+// Create data for testing
+function initShowTasks() {
 
 const testTask = {
     name: "Wash the car",
-    duedate: testDate,
-    priority: "Low"
+    duedate: new Date(2024, 4, 19),
+    priority: "2"
 }
 console.log(testTask);
-tasks.push(testTask);
-localStorage.setItem('tasks', JSON.stringify(tasks));
+// LLamada a la función que escribe los datos en el LocalStorage
+addTaskToLS(testTask);
+// LLamada a la función que escribe los datos en el DOM
+addTaskToDOM(testTask);
 
 const testTask2 = {
     name: "Walk the dog",
-    duedate: testDate2,
-    priority: "High"
+    duedate: new Date(2024, 4, 12),
+    priority: "0"
 }
 console.log(testTask2);
-tasks.push(testTask2);
-localStorage.setItem('tasks', JSON.stringify(tasks));
+// LLamada a la función que escribe los datos en el LocalStorage
+addTaskToLS(testTask2);
+// LLamada a la función que escribe los datos en el DOM
+addTaskToDOM(testTask2);
 
 const testTask3 = {
     name: "Feed the snake",
-    duedate: testDate3,
-    priority: "Medium"
+    duedate: new Date(2024, 4, 5),
+    priority: "1"
 }
 console.log(testTask3);
-tasks.push(testTask3);
-localStorage.setItem('tasks', JSON.stringify(tasks));
+// LLamada a la función que escribe los datos en el LocalStorage
+addTaskToLS(testTask3);
+// LLamada a la función que escribe los datos en el DOM
+addTaskToDOM(testTask3);
+}
 
-// Introducir los datos de prueba en LocalStorage y en el DOM
+// First function to run in a load or reload (FOR DEBUG PURPOSES ONLY!)
+function runMeFirst() {
 
-function initShowTasks() {
     const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
     console.log(tasksFromLS);
-        tasksFromLS.forEach((t) => {
-            // console.log(t.name);
-            // console.log(t.duedate);
-            // console.log(t.priority);
-            
-            const article = document.createElement('article');
-            article.className= 'task';
-            // console.log(article);
+    if (tasksFromLS === null) initShowTasks();
+    tasksFromLS.forEach((i) => addTaskToDOM(i));
 
-            const spanTN = document.createElement('span');
-            spanTN.className = 'taskName';
-            spanTN.appendChild(document.createTextNode(t.name));
-            article.appendChild(spanTN);
-            // console.log(spanTN);
-
-            const spanTD = document.createElement('span');
-            spanTD.className = 'expDate';
-            spanTD.appendChild(document.createTextNode(t.duedate));
-            article.appendChild(spanTD);
-            // console.log(spanTD);
-
-            const spanTP = document.createElement('span');
-            spanTP.className = 'priority';
-            spanTP.appendChild(document.createTextNode(t.priority));
-            article.appendChild(spanTP);
-            // console.log(spanTP);
-
-            const deleteBtn = document.createElement('span');
-            deleteBtn.classList = 'delete material-symbols-outlined';
-            deleteBtn.appendChild(document.createTextNode('delete_forever'));
-            article.appendChild(deleteBtn);
-            // console.log(deleteBtn);
-
-            // const taskToShow
-            //     = '<span class="taskName">' + t.name + '</span>\n'
-            //     + '<span class="expDate">' + t.date + '</span>\n'
-            //     + '<span class="priority">' + t.priority + '</span>\n'
-            //     + '<span class="delete material-symbols-outlined">delete_forever</span>\n';
-            // console.log(taskToShow);
-
-            taskList.appendChild(article);
-        });
 }
+
 ////////////////////////////////////////////////////////////////
-////////////// Hasta aqui los datos de prueba //////////////////
+/////////////////// Data for testing end ///////////////////////
 ////////////////////////////////////////////////////////////////
 
-const taskList = document.getElementById('taskList');
-const btnAddTask = document.getElementById('btnAddTask');
 
 
-
-
-
-// Función encargada de abrir los modales
+// This function opens the modals
 function openDlg(dialog) {
-    // console.log(dialog);
-    const addTaskDlg = document.getElementById(dialog);
-    addTaskDlg.showModal();
+    console.log("open dialog: " + dialog);
+    const currentDlg = document.getElementById(dialog);
+    currentDlg.showModal();
 }
 
-// Función llamada por el botón añadir tarea (del modal añadir tarea)
+// This function closes the modals
+function closeDlg(dialog) {
+    
+    // Set to 0 the form input values
+    if(dialog === 'addTaskDlg') {
+        const formAddTask = document.getElementById('formAddTask');
+        formAddTask.reset();
+    }
+
+    const currentDlg = document.getElementById(dialog);
+    currentDlg.close();
+
+}
+
+// This is the function that is called by the button add task in the modal
 function addTask(dialog) {
     
-    console.log(dialog);
+    // Point to the form inputs
     const InptTaskName = document.getElementById('taskName');
     const InptTaskDate = document.getElementById('taskDueDate');
     const InptTaskPriority = document.getElementById('taskPriority');
-    console.log(InptTaskName);
-    const taskName = InptTaskName.value;
-    console.log(taskName);
-    const taskDate = InptTaskDate.value;
-    console.log(taskDate);
-    const taskPriority = InptTaskPriority.value;
-    console.log(taskPriority);
-
-    addTaskToLS(taskName, taskDate, taskPriority);
-    addTaskToDOM(taskName, taskDate, taskPriority)
-}
-
-// Añadir la tarea al localStorage
-function addTaskToLS(taskName, taskDate, taskPriority) {
-
-    // Construimos el objeto
+    
+    // Build the object
     const taskObj = {
-        name: taskName,
-        duedate: taskDate,
-        priority: taskPriority
+        name: InptTaskName.value,
+        duedate: new Date(InptTaskDate.value),
+        priority: InptTaskPriority.value
     }
 
-    console.log(taskObj);
-    // Obtenemos los datos del LS
-    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
-    console.log(tasksFromLS);
-    // Añadimos el nuevo objeto
-    tasksFromLS.push(taskObj);
-    console.log(tasksFromLS);
-    // Poner a 0 los valores del formulario
-    const formAddTask = document.getElementById('formAddTask');
-    formAddTask.reset();
+    // Call the function that writes data into LocalStorage
+    addTaskToLS(taskObj);
+
+    // Call the function that writes data into DOM
+    addTaskToDOM(taskObj);
+
+    closeDlg(dialog);
+
 }
 
-// Añadir la tarea al DOM
-function addTaskToDOM(taskName, taskDate, taskPriority) {
-    // Creamos el "article"
-    const article = document.createElement('article');
-    article.className= 'task';
-    // Creamos el span "nombre"
-    const spanTN = document.createElement('span');
-    spanTN.className = 'taskName';
-    spanTN.appendChild(document.createTextNode(taskName));
-    article.appendChild(spanTN);
-    // Creamos el span "fecha"
-    const spanTD = document.createElement('span');
-    spanTD.className = 'expDate';
-    spanTD.appendChild(document.createTextNode(taskDate));
-    article.appendChild(spanTD);
-    // Creamos el span "prioridad"
-    const spanTP = document.createElement('span');
-    spanTP.className = 'priority';
-    spanTP.appendChild(document.createTextNode(taskPriority));
-    article.appendChild(spanTP);
-    // Creamos el span "boton borrar"
-    const deleteBtn = document.createElement('span');
-    deleteBtn.classList = 'delete material-symbols-outlined';
-    deleteBtn.appendChild(document.createTextNode('delete_forever'));
-    article.appendChild(deleteBtn);
+// Add the data to localStorage
+function addTaskToLS(taskObj) {
 
-    // Añadimos el "article" al section 
+    // Get data from LS
+    let tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    if (tasksFromLS === null) tasksFromLS = new Array;
+
+    // Add new object
+    tasksFromLS.push(taskObj);
+
+    // Send new data to LS
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
+
+}
+
+// Add the task to DOM
+function addTaskToDOM(taskObj) {
+
+    // Call the function that builds the article
+    const article = buildArticle(taskObj);
+
+    // Append the "article" to the section 
     taskList.appendChild(article);
 
+    // Only for debug
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    console.log(tasksFromLS);
+
 }
 
-// btnAddTask.addEventListener('click', openDlg('addTaskDlg'));
-document.addEventListener('DOMContentLoaded', initShowTasks);
+// Build article
+function buildArticle(taskObj){
+
+    let priority = taskObj.priority;
+    let priorityString;
+    switch(parseInt(taskObj.priority)) {
+        case 0:
+            priorityString = "High";
+            break;
+        case 1:
+            priorityString = "Medium";
+            break;
+        case 2:
+            priorityString = "Low";
+            break;
+    }
+
+    const article = document.createElement('article');
+    const expDate = new Date(taskObj.duedate);
+    article.className = 'task';
+    article.innerHTML = `<span class="taskName">${taskObj.name}</span>`
+                      + `<span class="expDate">Due date: ${expDate.toLocaleDateString()}</span>`
+                      + `<span class="priority">Priority: ${priorityString}</span>`
+                      + `<button onclick="deleteTask('${taskObj.name}')">`
+                      + `<span class="ko material-symbols-outlined">delete_forever</span>Delete task`
+                      + `</button>`;
+
+    return article;
+
+}
+
+// Delete one task
+function deleteTask(task) {
+
+    // Get data from DOM
+    const tasksFromDOM = taskList.querySelectorAll('article');
+    // Get data from LS
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    // Index for LS array
+    let index = 0;
+
+    // Iterate data from DOM
+    tasksFromDOM.forEach((i) => {
+
+        if(i.firstElementChild.textContent === task) {
+            
+            // Delete task from DOM
+            taskList.removeChild(i);
+            // Delete task from LS
+            tasksFromLS.splice(index, 1);
+
+        }
+        // Increase index
+        index++;
+    }  
+    );
+
+    // Write the updated 'tasks' in LS
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
+
+}
+
+// Delete All Tasks From DOM !!!
+function deleteAllTasksFromDOM(){
+    
+    // Leave the <section> empty
+    taskList.innerHTML = "";
+
+}
+
+// Delete All Tasks From LS !!!
+function deleteAllTasksFromLS() {
+    localStorage.removeItem('tasks');
+}
+
+// Delete All Tasks !!!
+function deleteAllTasks() {
+
+    // Delete All Tasks From DOM
+    deleteAllTasksFromDOM();
+    // Delete All Tasks From LS
+    deleteAllTasksFromLS();
+    // Close modal
+    closeDlg('removeAllTasksDlg')
+
+}
+
+// Function to filter tasks
+function filterTasks(e) {
+
+    // Change the logo and the text in the filter button
+    btnFilter.firstElementChild.textContent = 'filter_alt_off';
+    btnFilter.lastChild.textContent = 'Clear filter';
+
+    // Get the list of 'tasks'
+    const taskFromDOM = taskList.querySelectorAll('article');
+    // Convert the input text to lower case for comparison
+    const text = e.target.value.toLocaleLowerCase();
+
+    // Hide tasks using display property
+    taskFromDOM.forEach((i) => {
+        // Get the task name and convert it to lower case for comparison
+        const itemName = i.firstElementChild.textContent.toLocaleLowerCase();
+        if(itemName.indexOf(text)!=-1){
+            i.style.display = 'flex';
+        }else{
+            i.style.display = 'none';
+        }
+    }
+    );
+
+    // Change the logo and the text in the filter button
+    if(tasksFilter.value === '') {
+        btnFilter.firstElementChild.textContent = 'filter_alt';
+        btnFilter.lastChild.textContent = 'Filter tasks';
+    }
+
+}
+
+// Clear the filter input and display all the tasks
+function clearFilter() {
+
+    tasksFilter.value = '';
+    const task = taskList.querySelectorAll('article');
+    task.forEach((i) => i.style.display = 'flex');
+
+}
+
+// Changes the aspect of the filter button when is clicked
+function focusToFilter() {
+
+    if(btnFilter.firstElementChild.textContent === 'filter_alt_off') {
+        btnFilter.firstElementChild.textContent = 'filter_alt';
+        btnFilter.lastChild.textContent = 'Filter tasks';
+        clearFilter();
+    } else {
+        tasksFilter.focus();
+        btnFilter.firstElementChild.textContent = 'filter_alt_off';
+        btnFilter.lastChild.textContent = 'Clear filter';
+    }
+}
+
+// Sort tasks by date
+function sortByDate() {
+    
+    // Get data from LS
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    // Order the data with the sort function
+    tasksFromLS.sort((a,b) => {return a.duedate.localeCompare(b.duedate)});
+
+    // Write the "ordered" tasks in LS
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
+
+    // Delete All Tasks From DOM
+    deleteAllTasksFromDOM();
+    
+    // Add All Tasks to DOM
+    tasksFromLS.forEach((i) => addTaskToDOM(i));
+
+    closeDlg('sortTasksDlg')
+   
+}
+
+// Sort tasks by priority
+function sortByPriority() {
+    
+    // Get data from LS
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    // Order the data with the sort function
+    tasksFromLS.sort((a,b) => {return a.priority - b.priority});
+
+    // Write the "ordered" tasks in LS
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
+
+    // Delete All Tasks From DOM
+    deleteAllTasksFromDOM();
+    
+    // Add All Tasks to DOM
+    tasksFromLS.forEach((i) => addTaskToDOM(i));
+
+    closeDlg('sortTasksDlg')
+   
+}
+
+
+// Event listeners for the filter button and input
+btnFilter.addEventListener('click', focusToFilter);
+tasksFilter.addEventListener('input', filterTasks);
+
+
+// First function to run in a load or reload (FOR DEBUG PURPOSES ONLY!)
+document.addEventListener('DOMContentLoaded', runMeFirst);
