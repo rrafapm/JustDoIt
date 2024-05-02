@@ -77,20 +77,20 @@ function openDlg(dialog) {
 }
 
 // This function closes the modals
-function closeDlg(dialog) {
+function closeDlg(...dialog) {
     
     // Set to 0 the form input values
-    if(dialog === 'addTaskDlg') {
+    if(dialog[0] === 'addTaskDlg') {
         const formAddTask = document.getElementById('formAddTask');
         formAddTask.reset();
     }
 
-    const currentDlg = document.getElementById(dialog);
+    const currentDlg = document.getElementById(dialog[0]);
     currentDlg.close();
 
 }
 
-// This is the function that is called by the button add task in the modal
+// This is the function that is called by the button "add task" in the modal
 function addTask(dialog) {
     
     // Point to the form inputs
@@ -166,13 +166,62 @@ function buildArticle(taskObj){
     const expDate = new Date(taskObj.duedate);
     article.className = 'task';
     article.innerHTML = `<span class="taskName">${taskObj.name}</span>`
-                      + `<span class="expDate">Due date: ${expDate.toLocaleDateString()}</span>`
+                      + `<span class="expDate">Due date: ${expDate.toLocaleDateString('en-GB')}</span>`
                       + `<span class="priority">Priority: ${priorityString}</span>`
+                      + `<button onclick="editTask('${taskObj.name}')">`
+                      + `<span class="ok material-symbols-outlined">edit</span>Edit task`
+                      + `</button>`
                       + `<button onclick="deleteTask('${taskObj.name}')">`
                       + `<span class="ko material-symbols-outlined">delete_forever</span>Delete task`
                       + `</button>`;
 
     return article;
+
+}
+
+function editTask(task) {
+
+    const taskName = document.getElementById('taskName');
+    const taskDueDate = document.getElementById('taskDueDate');
+    const taskPriority = document.getElementById('taskPriority');
+
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    let index = 0;
+
+    tasksFromLS.forEach((i) => {
+
+        if(i.name === task) {
+
+            const addTaskDlgCancel = document.getElementById('addTaskDlgCancel');
+            
+            // Parse the date stock in LS
+            let buffer = new Date(tasksFromLS[index].duedate);
+            let bufferDate = buffer.toLocaleDateString('en-GB').split('/');
+            let bufferDay = bufferDate[0];
+            let bufferMonth = bufferDate[1];
+            let bufferYear = bufferDate[2];
+            bufferDate = bufferYear + '-' + bufferMonth + '-' + bufferDay;
+
+            // Insert data from task in the values of the form
+            taskName.value = tasksFromLS[index].name;
+            taskDueDate.value = bufferDate;
+            taskPriority.value = tasksFromLS[index].priority;
+            
+            // Add old Task as parameter of closeDLg() function to handle user's click in cancel button
+            let oldTask = tasksFromLS[index].name;
+            let dialogName = 'addTaskDlg';
+            addTaskDlgCancel.setAttribute('onclick',`closeDlg('${dialogName}', '${oldTask}')`);
+            // Delete old task from LS
+            deleteTask(tasksFromLS[index].name);
+                       
+            openDlg('addTaskDlg');
+
+        } else {
+            console.log('no');
+        };
+
+        index++;
+    })
 
 }
 

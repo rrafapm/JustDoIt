@@ -47,6 +47,18 @@ h2 {
     text-align: center;
 }
 
+button {
+    font-size: medium;
+    margin-inline: .5rem;
+    padding: .5rem;
+    border-radius: .5rem;
+    box-shadow: 2px 2px 1px 0px var(--dark);
+}
+
+button:hover {scale: 1.05}
+
+button:active {box-shadow: none}
+
 .logo {
     font-size: 10rem;
     font-weight: bolder;    
@@ -81,17 +93,8 @@ nav {
         padding-block: .5rem;
         padding-inline: 1.5rem;
         border: none;
-        border-radius: .5rem;
         outline: 2px solid var(--light);
         box-shadow: 5px 5px 3px 0px var(--dark);
-    }
-
-    & button:hover {
-        scale: 1.05;
-    }
-
-    & button:active {
-        box-shadow: none;
     }
 
 }
@@ -134,18 +137,6 @@ article {
     & button {
         background-color: var(--color1);
         color: var(--dark);
-        font-size: medium;
-        padding: .5rem;
-        border-radius: .5rem;
-        box-shadow: 2px 2px 1px 0px var(--dark);
-    }
-
-    & button:hover {
-        scale: 1.05;
-    }
-
-    & button:active {
-        box-shadow: none;
     }
 
 }
@@ -191,19 +182,6 @@ dialog {
     & button {
         background-color: var(--color1);
         color: var(--dark);
-        font-size: medium;
-        margin-inline: .5rem;
-        padding: .5rem;
-        border-radius: .5rem;
-        box-shadow: 2px 2px 1px 0px var(--dark);
-    }
-
-    & button:hover {
-        scale: 1.05;
-    }
-
-    & button:active {
-        box-shadow: none;
     }
     
     &::backdrop {
@@ -215,10 +193,12 @@ dialog {
 @media screen and (max-width: 880px) {
 
     nav {grid-template-columns: repeat(2, 1fr);}
+
 }
 
 @media screen and (max-width: 660px) {
 
     nav {grid-template-columns: 1fr;}
     section {grid-template-columns: 1fr;}
+
 }
