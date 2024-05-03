@@ -2,6 +2,9 @@
 const taskList = document.getElementById('taskList');
 const btnFilter = document.getElementById('btnFilter');
 const tasksFilter = document.getElementById('tasksFilter');
+const taskDlg = document.getElementById('addTaskDlg');
+
+let oldTask;
 
 
 // const btnDelAllTasks = document.getElementById('btnDelAllTasks');
@@ -85,6 +88,38 @@ function closeDlg(...dialog) {
         formAddTask.reset();
     }
 
+    // Check if the function is call with the name of a task
+    if(dialog[1]) {
+
+        // Build an object using the parameters passed by the function
+        let buffer = dialog[1].split(',');
+        const obj = {
+            name: buffer[0],
+            duedate: buffer[1],
+            priority: buffer[2]
+        }
+        console.log(obj);
+        console.log(typeof obj);
+
+        // Insert back to the LS the task passed as a parameter
+        addTaskToLS(obj);
+        // "Write" back the task in the DOM
+        addTaskToDOM(obj);
+        oldTask = '';
+        
+        const addTaskDlgCancel = document.getElementById('addTaskDlgCancel');
+        addTaskDlgCancel.setAttribute('onclick',"closeDlg('addTaskDlg')");
+
+        const formAddTask = document.getElementById('formAddTask');
+        formAddTask.reset();
+
+    }
+
+    // Reset the h2 in add/edit dialog
+    if(taskDlg.firstElementChild.textContent === 'Edit the task') {
+        taskDlg.firstElementChild.textContent = 'Fill the form to add a new task';
+    }
+
     const currentDlg = document.getElementById(dialog[0]);
     currentDlg.close();
 
@@ -97,6 +132,49 @@ function addTask(dialog) {
     const InptTaskName = document.getElementById('taskName');
     const InptTaskDate = document.getElementById('taskDueDate');
     const InptTaskPriority = document.getElementById('taskPriority');
+
+    // Safe to not insert empty tasks
+    let exit = false;
+
+    // Point to warning message in case is needed
+    const InptWarningMsg = document.getElementById('inputWarningMsg');
+
+    // Check if inputs are valid
+    // All filds must be filled
+    if ((InptTaskName.value === '') || (InptTaskDate.value === '')){
+        InptWarningMsg.textContent = "You must fill all fields.";
+        exit = true;
+        closeDlg(dialog);
+        openDlg('inputWarningDlg');
+        return
+    }
+    // Check for date in the past
+    // Get current date an the date introduced in the input
+    const inputTime = new Date(InptTaskDate.value);
+    const currentTime = new Date;
+    // To allow current day
+    currentTime.setDate(currentTime.getDate() - 1);
+    // Checking the date is in the past
+    if((inputTime.getTime() - currentTime.getTime()) < 0 ) {
+        InptWarningMsg.textContent = "You can't set a date in the past.";
+        closeDlg(dialog);
+        openDlg('inputWarningDlg');
+        return
+    }
+    // Check for a task with the same name
+    // Get the data in LS
+    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+
+    tasksFromLS.forEach((i) => {
+        if(i.name.toLocaleLowerCase() === InptTaskName.value.toLocaleLowerCase()) {
+            InptWarningMsg.textContent = "Already exist a task with the same name.";
+            closeDlg(dialog);
+            openDlg('inputWarningDlg');
+            return
+        }
+    })
+
+    if(exit) return;
     
     // Build the object
     const taskObj = {
@@ -143,12 +221,14 @@ function addTaskToDOM(taskObj) {
     const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
     console.log(tasksFromLS);
 
+    const formAddTask = document.getElementById('formAddTask');
+    formAddTask.reset();
+
 }
 
 // Build article
 function buildArticle(taskObj){
 
-    let priority = taskObj.priority;
     let priorityString;
     switch(parseInt(taskObj.priority)) {
         case 0:
@@ -164,16 +244,22 @@ function buildArticle(taskObj){
 
     const article = document.createElement('article');
     const expDate = new Date(taskObj.duedate);
-    article.className = 'task';
-    article.innerHTML = `<span class="taskName">${taskObj.name}</span>`
-                      + `<span class="expDate">Due date: ${expDate.toLocaleDateString('en-GB')}</span>`
-                      + `<span class="priority">Priority: ${priorityString}</span>`
+    // article.className = 'task';
+    article.innerHTML = `<div class="task">`
+                      + `<span class="taskName">${taskObj.name}</span>`                      
+                      + `<div class="taskData">`
+                      + `<span class="expDate"><span class="material-symbols-outlined">calendar_today</span> ${expDate.toLocaleDateString('en-GB')}</span>`
+                      + `<span class="priority"><span class="material-symbols-outlined">priority_high</span> ${priorityString}</span>`
+                      + `</div>`
+                      + `</div>`
+                      + `<div class="taskActions">`
                       + `<button onclick="editTask('${taskObj.name}')">`
-                      + `<span class="ok material-symbols-outlined">edit</span>Edit task`
+                      + `<span class="material-symbols-outlined">edit</span>`
                       + `</button>`
                       + `<button onclick="deleteTask('${taskObj.name}')">`
-                      + `<span class="ko material-symbols-outlined">delete_forever</span>Delete task`
-                      + `</button>`;
+                      + `<span class="material-symbols-outlined">delete_forever</span>`
+                      + `</button>`
+                      + `</div>`;
 
     return article;
 
@@ -181,10 +267,12 @@ function buildArticle(taskObj){
 
 function editTask(task) {
 
+    // "Pointers" to inputs fields in form
     const taskName = document.getElementById('taskName');
     const taskDueDate = document.getElementById('taskDueDate');
     const taskPriority = document.getElementById('taskPriority');
 
+    // Get tasks from LS
     const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
     let index = 0;
 
@@ -194,7 +282,7 @@ function editTask(task) {
 
             const addTaskDlgCancel = document.getElementById('addTaskDlgCancel');
             
-            // Parse the date stock in LS
+            // Parse the data stored in LS
             let buffer = new Date(tasksFromLS[index].duedate);
             let bufferDate = buffer.toLocaleDateString('en-GB').split('/');
             let bufferDay = bufferDate[0];
@@ -208,9 +296,13 @@ function editTask(task) {
             taskPriority.value = tasksFromLS[index].priority;
             
             // Add old Task as parameter of closeDLg() function to handle user's click in cancel button
-            let oldTask = tasksFromLS[index].name;
+            oldTask = [tasksFromLS[index].name, tasksFromLS[index].duedate, tasksFromLS[index].priority];
             let dialogName = 'addTaskDlg';
             addTaskDlgCancel.setAttribute('onclick',`closeDlg('${dialogName}', '${oldTask}')`);
+
+            // Change the h2 in add/edit dialog
+            taskDlg.firstElementChild.textContent = 'Edit the task';
+
             // Delete old task from LS
             deleteTask(tasksFromLS[index].name);
                        
@@ -238,7 +330,7 @@ function deleteTask(task) {
     // Iterate data from DOM
     tasksFromDOM.forEach((i) => {
 
-        if(i.firstElementChild.textContent === task) {
+        if(i.firstChild.firstElementChild.textContent === task) {
             
             // Delete task from DOM
             taskList.removeChild(i);

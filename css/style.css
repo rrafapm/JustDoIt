@@ -3,11 +3,12 @@
 
 
 :root {
-    --color1: #d6e4f0; 
-    --color2: #1e56a0; 
-    --color3: #163172;
+
+    --color1: #f8e3e3; 
+    --color2: #0f374a; 
+    --color3: #2b4450;
     --light: #f6f6f6;
-    --dark:  #101010;
+    --dark:  #ff5100;
     --ok-color: green;
     --ko-color: red;
 }
@@ -21,6 +22,7 @@ body {
     padding: 0;
     font-family: "Roboto", sans-serif;
     background-color: var(--color1);
+    color: var(--color2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,6 +47,7 @@ h2 {
     font-weight: bold;
     padding: 1rem;
     text-align: center;
+    color: var(--color3);
 }
 
 button {
@@ -63,7 +66,7 @@ button:active {box-shadow: none}
     font-size: 10rem;
     font-weight: bolder;    
     vertical-align: -25%;
-    color: var(--ok-color);
+    color: var(--dark);
     margin-inline-end: -5rem;
 }
 
@@ -123,20 +126,41 @@ section {
 
 article {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
     gap: 1rem;
-    background-color: var(--color2);
-    color: var(--light);
+    justify-content: space-between;
+    /* background-color: var(--color2); */
+    /* color: var(--light); */
     font-size: x-large;
     padding-block: 1rem;
     padding-inline: 2rem;
-    outline: 2px solid var(--light);
+    outline: 2px solid var(--dark);
     border-radius: 1rem;
 
+    & .task {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        justify-content: space-around;
+    }
+
+    & .taskData {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        font-size: large;
+    }
+
+    & .taskActions {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+    }
 
     & button {
-        background-color: var(--color1);
-        color: var(--dark);
+        background-color: var(--color2);
+        color: var(--light);
     }
 
 }
@@ -154,8 +178,8 @@ footer {
 }
 
 dialog {
-    background-color: var(--color2);
-    color: var(--light);
+    background-color: var(--color1);
+    color: var(--dark);
     font-size: x-large;
     padding-block: 1rem;
     padding-inline: 2rem;
@@ -180,8 +204,8 @@ dialog {
     }
 
     & button {
-        background-color: var(--color1);
-        color: var(--dark);
+        background-color: var(--color2);
+        color: var(--light);
     }
     
     &::backdrop {
@@ -190,13 +214,13 @@ dialog {
     }
 }
 
-@media screen and (max-width: 880px) {
+@media screen and (max-width: 935px) {
 
     nav {grid-template-columns: repeat(2, 1fr);}
 
 }
 
-@media screen and (max-width: 660px) {
+@media screen and (max-width: 785px) {
 
     nav {grid-template-columns: 1fr;}
     section {grid-template-columns: 1fr;}

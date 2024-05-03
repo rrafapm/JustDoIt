@@ -33,7 +33,7 @@
         <h2>Fill the form to add a new task</h2>
         <form action="#" method="dialog" id="formAddTask">
             <label for="taskName">Write the name of the task:</label>
-            <input type="text" name="taskName" id="taskName">
+            <input type="text" maxlength="25" name="taskName" id="taskName">
             <label for="taskDueDate">Select the due date:</label>
             <input type="date" name="taskDueDate" id="taskDueDate">
             <label for="taskPriority">Select the priority:</label>
@@ -42,23 +42,29 @@
                 <option value="1">Medium</option>
                 <option value="2">Low</option>
             </select>
-            <button type="submit" onclick="addTask('addTaskDlg')"><span class="ok material-symbols-outlined">add</span> Add task</button>
-            <button onclick="closeDlg('addTaskDlg')" id="addTaskDlgCancel"><span class="ko material-symbols-outlined">close</span> Cancel</button>
+            <button type="submit" onclick="addTask('addTaskDlg')"><span class="material-symbols-outlined">add_task</span> Confirm</button>
+            <button onclick="closeDlg('addTaskDlg')" id="addTaskDlgCancel"><span class="material-symbols-outlined">close</span> Cancel</button>
         </form>
     </dialog>
     <dialog id="sortTasksDlg">
         <h2>How do you want to sort your tasks?</h2>
         <div class="center">
-            <button onclick="sortByDate()"><span class="ok material-symbols-outlined">calendar_month</span> Sort by date</button>
-            <button onclick="sortByPriority()"><span class="ok material-symbols-outlined">priority_high</span> Sort by priority</button>
+            <button onclick="sortByDate()"><span class="material-symbols-outlined">calendar_month</span> Sort by date</button>
+            <button onclick="sortByPriority()"><span class="material-symbols-outlined">priority_high</span> Sort by priority</button>
         </div>
     </dialog>
     <dialog id="removeAllTasksDlg">
         <h2><span class="danger">Caution!</span> All tasks will be deleted and the data will be lost forever.</h2>
         <div class="center">
-            <button id="DelAllTasks" onclick="deleteAllTasks()"><span class="ko material-symbols-outlined">bomb</span> Delete all data</button>
-            <button onclick="closeDlg('removeAllTasksDlg')"><span class="ok material-symbols-outlined">close</span> Cancel, don't delete</button>
+            <button id="DelAllTasks" onclick="deleteAllTasks()"><span class="material-symbols-outlined">bomb</span> Delete all data</button>
+            <button onclick="closeDlg('removeAllTasksDlg')"><span class="material-symbols-outlined">close</span> Cancel, don't delete</button>
         </div>
-    </dialog>    
+    </dialog>
+    <dialog id="inputWarningDlg">
+        <h2 id="inputWarningMsg"></h2>
+        <div class="center">
+            <button onclick="closeDlg('inputWarningDlg')"><span class="material-symbols-outlined">refresh</span> Understood</button>
+        </div>
+    </dialog>
 </body>
 </html>
