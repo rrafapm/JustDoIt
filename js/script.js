@@ -13,12 +13,14 @@ let oldTask;
 ////////////////////////////////////////////////////////////////
 //////////////////////   Data for testing  /////////////////////
 ////////////////////////////////////////////////////////////////
-// Task object
+// task object =
 // {
 //     name: string,
 //     duedate: date object,
 //     priority: int
 // };
+
+// Use for debug only!!!
 // Create data for testing
 function initShowTasks() {
 
@@ -56,25 +58,33 @@ addTaskToLS(testTask3);
 addTaskToDOM(testTask3);
 }
 
-// First function to run in a load or reload (FOR DEBUG PURPOSES ONLY!)
-function runMeFirst() {
-
-    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
-    console.log(tasksFromLS);
-    if (tasksFromLS === null) initShowTasks();
-    tasksFromLS.forEach((i) => addTaskToDOM(i));
-
-}
-
 ////////////////////////////////////////////////////////////////
 /////////////////// Data for testing end ///////////////////////
 ////////////////////////////////////////////////////////////////
 
+// First function to run in a load or reload (FOR DEBUG PURPOSES ONLY!)
+function runMeFirst() {
 
+    // Check for previous data
+    let tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    if (tasksFromLS === null){
+        tasksFromLS = new Array;
+    } else {
+        tasksFromLS.forEach((i) => addTaskToDOM(i));
+    }
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
+    
+    // Use for debug only!!!
+    // const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    // console.log(tasksFromLS);
+    // if (tasksFromLS === null) initShowTasks();
+    // tasksFromLS.forEach((i) => addTaskToDOM(i));
+
+}
 
 // This function opens the modals
 function openDlg(dialog) {
-    console.log("open dialog: " + dialog);
+    // console.log("open dialog: " + dialog);
     const currentDlg = document.getElementById(dialog);
     currentDlg.showModal();
 }
@@ -98,8 +108,8 @@ function closeDlg(...dialog) {
             duedate: buffer[1],
             priority: buffer[2]
         }
-        console.log(obj);
-        console.log(typeof obj);
+        // console.log(obj);
+        // console.log(typeof obj);
 
         // Insert back to the LS the task passed as a parameter
         addTaskToLS(obj);
@@ -156,7 +166,7 @@ function addTask(dialog) {
     currentTime.setDate(currentTime.getDate() - 1);
     // Checking the date is in the past
     if((inputTime.getTime() - currentTime.getTime()) < 0 ) {
-        InptWarningMsg.textContent = "You can't set a date in the past.";
+        InptWarningMsg.textContent = "The date you introduced is not correct.";
         closeDlg(dialog);
         openDlg('inputWarningDlg');
         return
@@ -218,9 +228,10 @@ function addTaskToDOM(taskObj) {
     taskList.appendChild(article);
 
     // Only for debug
-    const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
-    console.log(tasksFromLS);
+    // const tasksFromLS = JSON.parse(localStorage.getItem('tasks'));
+    // console.log(tasksFromLS);
 
+    // Reset the form
     const formAddTask = document.getElementById('formAddTask');
     formAddTask.reset();
 
@@ -265,6 +276,7 @@ function buildArticle(taskObj){
 
 }
 
+// Edit task
 function editTask(task) {
 
     // "Pointers" to inputs fields in form
@@ -308,9 +320,9 @@ function editTask(task) {
                        
             openDlg('addTaskDlg');
 
-        } else {
-            console.log('no');
-        };
+        } // else {
+        //     console.log('no');
+        // };
 
         index++;
     })
@@ -359,6 +371,8 @@ function deleteAllTasksFromDOM(){
 // Delete All Tasks From LS !!!
 function deleteAllTasksFromLS() {
     localStorage.removeItem('tasks');
+    let tasksFromLS = new Array;
+    localStorage.setItem('tasks', JSON.stringify(tasksFromLS));
 }
 
 // Delete All Tasks !!!
@@ -388,7 +402,7 @@ function filterTasks(e) {
     // Hide tasks using display property
     taskFromDOM.forEach((i) => {
         // Get the task name and convert it to lower case for comparison
-        const itemName = i.firstElementChild.textContent.toLocaleLowerCase();
+        const itemName = i.firstElementChild.firstElementChild.textContent.toLocaleLowerCase();
         if(itemName.indexOf(text)!=-1){
             i.style.display = 'flex';
         }else{
@@ -476,5 +490,5 @@ btnFilter.addEventListener('click', focusToFilter);
 tasksFilter.addEventListener('input', filterTasks);
 
 
-// First function to run in a load or reload (FOR DEBUG PURPOSES ONLY!)
+// First function to run in a load or reload (MOSTLY FOR DEBUG PURPOSES!)
 document.addEventListener('DOMContentLoaded', runMeFirst);

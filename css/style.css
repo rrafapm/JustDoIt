@@ -5,7 +5,8 @@
 :root {
 
     --color1: #f8e3e3; 
-    --color2: #0f374a; 
+    /* --color2: #0f374a; */
+    --color2: #08628b;
     --color3: #2b4450;
     --light: #f6f6f6;
     --dark:  #ff5100;
@@ -40,6 +41,7 @@ h1 {
     font-size: 5rem;
     font-weight: bolder;
     padding: 3rem;
+    user-select: none;
 }
 
 h2 {
@@ -51,14 +53,30 @@ h2 {
 }
 
 button {
+    background-color: var(--color2);
+    color: var(--light);
     font-size: medium;
     margin-inline: .5rem;
     padding: .5rem;
-    border-radius: .5rem;
+    border: 2px solid var(--light);
+    border-radius: .25rem;
     box-shadow: 2px 2px 1px 0px var(--dark);
 }
 
-button:hover {scale: 1.05}
+input::placeholder {
+    font-style: italic;
+    color: var(--light);
+    opacity: .5;
+}
+
+button:hover {
+    scale: 1.05;
+    animation: scale-hover 250ms linear forwards;
+}
+@keyframes scale-hover {
+    0% {scale: 1;}
+    100% {scale: 1.05;}
+}
 
 button:active {box-shadow: none}
 
@@ -67,16 +85,14 @@ button:active {box-shadow: none}
     font-weight: bolder;    
     vertical-align: -25%;
     color: var(--dark);
-    margin-inline-end: -5rem;
+    margin-inline-end: -7.5rem;
 }
 
-.hide {
-    display: none;
-}
+.hide {color: transparent;}
 
 .danger {
     color: var(--ko-color);
-    text-shadow: 2px 2px var(--dark);
+    text-shadow: 1px 1px var(--ko-color);
 }
 
 .ok {color: var(--ok-color);}
@@ -90,13 +106,11 @@ nav {
     gap: 1rem;
 
     & button {
-        background-color: var(--color2);
-        color: var(--light);
         font-size: large;
         padding-block: .5rem;
         padding-inline: 1.5rem;
         border: none;
-        outline: 2px solid var(--light);
+        border: 2px solid var(--light);
         box-shadow: 5px 5px 3px 0px var(--dark);
     }
 
@@ -113,7 +127,7 @@ nav {
     padding-block: .5rem;
     padding-inline: 1rem;
     font-size: large;
-    border-radius: .5rem;
+    border-radius: .25rem;
     /* box-shadow: -2px -2px 1px 0px var(--light) inset,
                 2px 2px 1px 0px var(--dark) inset; */
 }
@@ -130,13 +144,11 @@ article {
     flex-wrap: nowrap;
     gap: 1rem;
     justify-content: space-between;
-    /* background-color: var(--color2); */
-    /* color: var(--light); */
     font-size: x-large;
     padding-block: 1rem;
     padding-inline: 2rem;
-    outline: 2px solid var(--dark);
-    border-radius: 1rem;
+    border: 1px solid var(--dark);
+    border-radius: .5rem;
 
     & .task {
         display: flex;
@@ -158,11 +170,6 @@ article {
         gap: .5rem;
     }
 
-    & button {
-        background-color: var(--color2);
-        color: var(--light);
-    }
-
 }
 
 footer {
@@ -174,7 +181,7 @@ footer {
     min-height: 7.5vh;
     background-color: var(--color2);
     color: var(--light);
-    border-radius: 1rem;
+    border-radius: .5rem;
 }
 
 dialog {
@@ -184,9 +191,9 @@ dialog {
     padding-block: 1rem;
     padding-inline: 2rem;
     /* text-align: center; */
-    outline: 2px solid var(--light);
+    border: 2px solid var(--light);
     border: none;
-    border-radius: 1rem;
+    border-radius: .5rem;
 
     & form {
         display: flex;
@@ -200,14 +207,9 @@ dialog {
         padding-block: .5rem;
         padding-inline: 1rem;
         font-size: large;
-        border-radius: .5rem;
+        border-radius: .25rem;
     }
 
-    & button {
-        background-color: var(--color2);
-        color: var(--light);
-    }
-    
     &::backdrop {
         background-color: var(--color2);
         opacity: .3;
